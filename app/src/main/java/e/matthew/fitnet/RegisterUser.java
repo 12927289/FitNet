@@ -89,7 +89,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
 
         if (view == loginTextView) {
             finish();
-            startActivity(new Intent(this, Login.class));
+            startActivity(new Intent(this, CreateProfile.class));
         }
     }
 }

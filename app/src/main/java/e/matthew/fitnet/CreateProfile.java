@@ -1,6 +1,8 @@
 package e.matthew.fitnet;
 
+import android.content.Intent;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,9 +11,13 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 
 public class CreateProfile extends AppCompatActivity implements View.OnClickListener {
 
@@ -24,6 +30,7 @@ public class CreateProfile extends AppCompatActivity implements View.OnClickList
     private Button createProfileButton;
 
     private FirebaseAuth firebaseAuth;
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +62,19 @@ public class CreateProfile extends AppCompatActivity implements View.OnClickList
         UserProfile userProfile = new UserProfile(firstName, lastName, dob, gender);
 
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        databaseReference.child(user.getUid().setValue())
+        databaseReference.child(user.getUid()).setValue(userProfile).addOnCompleteListener(this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(CreateProfile.this, "Profile Created", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), Profile.class));
+                } else {
+                    Toast.makeText(CreateProfile.this, "Profile could not be created", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
     }
 
     @Override

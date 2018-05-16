@@ -7,7 +7,7 @@ public class UserProfile {
     public String dob;
     public String gender;
 
-    public createProfile (String firstName, String lastName, String dob, String gender) {
+    public UserProfile (String firstName, String lastName, String dob, String gender) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dob = dob;
