@@ -1,4 +1,4 @@
-package com.example.james.fitnet;
+package com.example.achievementsystem;
 
 import org.junit.Test;
 
