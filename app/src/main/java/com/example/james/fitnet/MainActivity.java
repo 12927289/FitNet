@@ -1,6 +1,7 @@
 package com.example.james.fitnet;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -10,16 +11,26 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
     private TextView mTextMessage;
+    private Button mShareBtn;
+    private Button mSetZeroBtn;
 
     private SensorManager sensorManager;
     private TextView count;
+    private TextView distance;
+    private TextView calorie;
     boolean activityRunning;
+
+    int pastSteps;
+    int steps;
+    int nowSteps;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -52,7 +63,31 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         count = (TextView) findViewById(R.id.count);
+        distance = (TextView) findViewById(R.id.kmTv);
+        calorie = (TextView) findViewById(R.id.calorieTv);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+        mShareBtn = (Button)findViewById(R.id.shareBtn);
+        mShareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                String shareBody = "FitNet";
+                String shareSub = "I have been walked "+count.getText()+" via FitNet!";
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, shareBody);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, shareSub);
+                startActivity(Intent.createChooser(shareIntent, "Share using"));
+            }
+        });
+
+        mSetZeroBtn = (Button) findViewById(R.id.setZeroBtn);
+        mSetZeroBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setStepZero();
+            }
+        });
     }
 
     @Override
@@ -75,9 +110,29 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+        steps = (int) sensorEvent.values[0];
+        if(pastSteps < steps) nowSteps = steps - pastSteps;
         if (activityRunning) {
-            count.setText(String.valueOf(sensorEvent.values[0]));
+            count.setText(String.valueOf(nowSteps) + " steps");
+            distance.setText("Distance: " + getDistanceByStep((long) nowSteps) + "km");
+            calorie.setText("Calorie: " + getCalorieByStep((long) nowSteps) + "cal");
         }
+    }
+
+    private String getDistanceByStep(long steps) {
+        return String.format("%.2f", steps * 0.6f / 1000);
+    }
+
+    private String getCalorieByStep(long steps) {
+        return String.format("%.1f", steps * 0.6f * 60 * 1.036f / 1000);
+    }
+
+    private void setStepZero() {
+        pastSteps = steps;
+        nowSteps = 0;
+        count.setText(String.valueOf(nowSteps) + " steps");
+        distance.setText("Distance: " + getDistanceByStep((long) nowSteps) + "km");
+        calorie.setText("Calorie: " + getCalorieByStep((long) nowSteps) + "cal");
     }
 
     @Override
