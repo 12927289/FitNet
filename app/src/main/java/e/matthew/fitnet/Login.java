@@ -17,13 +17,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import org.w3c.dom.Text;
-
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
     private Button loginBtn;
-    private EditText emailText;
-    private EditText passwordText;
+    private EditText emailEditText;
+    private EditText passwordEditText;
     private TextView registerTextView;
     private ProgressDialog progressDialog;
 
@@ -36,13 +34,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        if (firebaseAuth.getCurrentUser() != null) {
-            finish();
-            startActivity(new Intent(this, Profile.class));
-        }
-
-        emailText = (EditText) findViewById(R.id.emailText);
-        passwordText = (EditText) findViewById(R.id.passwordText);
+        emailEditText = (EditText) findViewById(R.id.emailEditText);
+        passwordEditText = (EditText) findViewById(R.id.passwordEditText);
         loginBtn = (Button) findViewById(R.id.loginBtn);
         registerTextView = (TextView) findViewById(R.id.registerTextView);
         progressDialog = new ProgressDialog(this);
@@ -52,8 +45,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void userLogin() {
-        String email = emailText.getText().toString().trim();
-        String password = passwordText.getText().toString().trim();
+        String email = emailEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
@@ -74,7 +67,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 progressDialog.dismiss();
                 if (task.isSuccessful()) {
                     finish();
-                    startActivity(new Intent(getApplicationContext(),Profile.class));
+                    startActivity(new Intent(getApplicationContext(), Profile.class));
                 } else {
                     Toast.makeText(Login.this, "Could not login", Toast.LENGTH_SHORT).show();
                 }
@@ -90,7 +83,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         if (view == registerTextView) {
             finish();
-            startActivity(new Intent(this, RegisterUser.class));
+            startActivity(new Intent(this, Register.class));
         }
     }
 }
