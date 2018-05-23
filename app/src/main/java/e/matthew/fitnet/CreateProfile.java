@@ -68,7 +68,7 @@ public class CreateProfile extends AppCompatActivity implements View.OnClickList
         databaseReference.child(user.getUid()).setValue(userProfile);
         Toast.makeText(this, "User Profile Created", Toast.LENGTH_LONG).show();
         finish();
-        startActivity(new Intent(this, Profile.class));
+        startActivity(new Intent(this, HomePage.class));
     }
 
     @Override

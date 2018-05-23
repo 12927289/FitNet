@@ -67,7 +67,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 progressDialog.dismiss();
                 if (task.isSuccessful()) {
                     finish();
-                    startActivity(new Intent(getApplicationContext(), Profile.class));
+                    startActivity(new Intent(getApplicationContext(), BottomNavigation.class));
                 } else {
                     Toast.makeText(Login.this, "Could not login", Toast.LENGTH_SHORT).show();
                 }

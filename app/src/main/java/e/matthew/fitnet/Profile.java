@@ -1,14 +1,19 @@
 package e.matthew.fitnet;
 
 import android.content.Intent;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -19,36 +24,33 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
-public class Profile extends AppCompatActivity implements View.OnClickListener {
+public class Profile extends Fragment{
 
     private TextView nameTextView;
     private TextView heightTextView;
     private TextView weightTextView;
     private TextView ageTextView;
     private TextView genderTextView;
-    private Button logoutBtn;
     private ProgressBar bmiProgressBar;
     private TextView bmiTextView;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.activity_profile,null);
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        nameTextView = (TextView) findViewById(R.id.nameTextView);
-        heightTextView = (TextView) findViewById(R.id.heightTextView);
-        weightTextView = (TextView) findViewById(R.id.weightTextView);
-        ageTextView = (TextView) findViewById(R.id.ageTextView);
-        genderTextView = (TextView) findViewById(R.id.genderTextView);
-        logoutBtn = (Button) findViewById(R.id.logoutBtn);
-        bmiProgressBar = (ProgressBar) findViewById(R.id.bmiProgressBar);
-        bmiTextView = (TextView) findViewById(R.id.bmiTextView);
-        logoutBtn.setOnClickListener(this);
+        nameTextView = (TextView) v.findViewById(R.id.nameTextView);
+        heightTextView = (TextView) v.findViewById(R.id.heightTextView);
+        weightTextView = (TextView) v.findViewById(R.id.weightTextView);
+        ageTextView = (TextView) v.findViewById(R.id.ageTextView);
+        genderTextView = (TextView) v.findViewById(R.id.genderTextView);
+        bmiProgressBar = (ProgressBar) v.findViewById(R.id.bmiProgressBar);
+        bmiTextView = (TextView) v.findViewById(R.id.bmiTextView);
 
         DatabaseReference ref = databaseReference.getRef();
         ref.addValueEventListener(new ValueEventListener() {
@@ -80,6 +82,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                     bmiTextView.setText("Your BMI is " + String.valueOf(bmi) + ", You're Overweight");
                 if (bmi >= 30)
                     bmiTextView.setText("Your BMI is " + String.valueOf(bmi) + ", You're Obese");
+
             }
 
             @Override
@@ -87,15 +90,6 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
-
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view == logoutBtn) {
-            firebaseAuth.signOut();
-            finish();
-            startActivity(new Intent(this, Login.class));
-        }
+        return v;
     }
 }
