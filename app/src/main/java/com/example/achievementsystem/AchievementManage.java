@@ -23,7 +23,6 @@ public class AchievementManage {
                 db.execSQL(sql);
             }
         }
-
     }
 
     public static Cursor selectDataBySql(SQLiteDatabase db,String sql,

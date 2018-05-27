@@ -3,19 +3,16 @@ package com.example.achievementsystem;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private Achievements achievements;
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
